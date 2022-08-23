@@ -1,0 +1,7 @@
+image: /home/robomuse5/RoboMuse_V/install_isolated/share/robomuse_cartographer/maps/2_laser_map5.pgm
+resolution: 0.050000
+origin: [-2.808646, -3.110062, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

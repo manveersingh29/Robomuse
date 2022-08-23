@@ -1,0 +1,12 @@
+<launch>
+  <include file="$(find robomuse_hardware)/launch/hw_control.launch"/>
+  <include file="$(find robomuse_hardware)/launch/hokuyo_pose.launch"/>
+  <include file="$(find robomuse_hardware)/launch/ekf_odom.launch"/>
+    <node pkg="robomuse_hardware" type="odometry_calibration_service"
+     name="odometry_calibration_service" output="screen">
+    </node>
+    <node pkg="robomuse_hardware" type="yaw_odom+imu_quat+hokuyo_odom_publisher.py"
+     name="yaw_odom+imu_quat+hokuyo_odom_publisher" output="screen"> 
+   </node> 
+  
+</launch>  

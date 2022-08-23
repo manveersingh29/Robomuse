@@ -1,0 +1,25 @@
+<launch>
+  <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+  <param name="serial_port"         type="string" value="/dev/robomuse/rplidar"/>
+  <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+  <!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
+  <!--param name="frame_id"            type="string" value="laser"/--> 
+
+  <!-- decides the frame used by Rplidar relative to 
+  which the laserscans are published -->
+  <param name="frame_id"            type="string" value="rplidar"/>
+  <param name="inverted"            type="bool"   value="false"/>
+  <param name="angle_compensate"    type="bool"   value="true"/>
+  <!-- <remap from="mybot/laser/scan" to="/scan" />   uncomment this while using navigation.launch and comment the one below -->
+    <!-- uncomment this while using bringup.launch and comment the one above -->
+  <!--remap from="scan" to="/scan1" /-->
+  </node>
+
+
+ <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
+    <rosparam command="load" file="$(find laser_filters)/examples/angle_bound.yaml" />
+    <param name="frame_id"            type="string" value="rplidar"/>
+    <!--remap from="/scan1" to="scan" /-->
+  </node>
+
+</launch>

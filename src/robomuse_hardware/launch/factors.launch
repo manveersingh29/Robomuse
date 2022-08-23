@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="robomuse_hardware" type="configure_testing"
+    name="configure_testing" output="screen">
+	<rosparam command="load" file="$(find robomuse_hardware)/config/factor.yaml"/>	
+  </node>
+</launch>

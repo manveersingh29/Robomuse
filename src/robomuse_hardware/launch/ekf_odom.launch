@@ -1,0 +1,39 @@
+<launch>
+    <!--arg name="IS_TWISTSTAMPED" default="true" /-->
+   <arg name="use_rviz" default="false" />
+  <!--arg name="publish_covariance" default="false" /-->
+  <arg name="model" default="$(find robomuse_description)/urdf/robomuse.xacro"/>
+  <arg name="gui" default="false" />
+  <arg name="rvizconfig" default="$(find robomuse_hardware)/launch/hokuyo_rviz.rviz" />
+
+  <param name="robot_description" command="$(find xacro)/xacro.py --inorder '$(arg model)'" />
+  <param name="use_gui" value="$(arg gui)"/>
+
+  #Uncomment joint_state_publisher and robot_state_publisher when using the ekf_odom launch file without navigation 
+  <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /-->
+  <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" /-->
+
+  <group if="$(arg use_rviz)">
+    <!--node pkg="rviz" type="rviz" name="rviz" /-->
+  </group>  
+  <!-- Robot pose ekf -->
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
+    <param name="output_frame" value="odom"/>
+    <param name="base_footprint_frame" value="base_link"/>
+    <!--param name="base_frame" value="base_link"/-->
+    
+    <param name="freq" value="10.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <remap from="odom" to="robomuse_diff/odom" />
+    <remap from="imu_data" to="imu" />
+    <!--remap from="vo" to= "hokuyo" /-->
+	
+ 
+   
+  </node>
+
+
+</launch>

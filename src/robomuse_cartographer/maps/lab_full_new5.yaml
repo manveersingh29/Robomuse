@@ -1,0 +1,7 @@
+image: /home/robomuse5/RoboMuse_V/src/robomuse_cartographer/maps/lab_full_new5.pgm
+resolution: 0.050000
+origin: [-5.762906, -10.355992, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

@@ -1,0 +1,39 @@
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+joint_limits:
+  lift_base_to_base_slider:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  lift_top_to_top_slider:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  scissor_rod1_base_to_scissor_rod1:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  scissor_rod1_top_to_lift_top:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  scissor_rod2_base_to_scissor_rod2:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  scissor_rod3_base_to_scissor_rod3:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0
+  scissor_rod4_base_to_scissor_rod4:
+    has_velocity_limits: true
+    max_velocity: 1000
+    has_acceleration_limits: false
+    max_acceleration: 0

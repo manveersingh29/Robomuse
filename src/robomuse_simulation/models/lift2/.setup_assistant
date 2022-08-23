@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: robomuse_description
+    relative_path: urdf/lifting_mechanism.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/lifting_mechanism.srdf
+  CONFIG:
+    author_name: pt
+    author_email: thaparpiyush123@gmail.com
+    generated_timestamp: 1584028932

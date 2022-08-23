@@ -1,0 +1,10 @@
+controller_list:
+  - name: fake_lift_controller
+    joints:
+      - lift_base_to_base_slider
+      - scissor_rod1_base_to_scissor_rod1
+      - scissor_rod1_top_to_lift_top
+      - lift_top_to_top_slider
+      - scissor_rod3_base_to_scissor_rod3
+      - scissor_rod2_base_to_scissor_rod2
+      - scissor_rod4_base_to_scissor_rod4

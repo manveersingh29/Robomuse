@@ -1,0 +1,37 @@
+# Simulation settings for using moveit_sim_controllers
+moveit_sim_hw_interface:
+  joint_model_group: lift
+  joint_model_group_pose: min_height
+# Settings for ros_control_boilerplate control loop
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+    - lift_base_to_base_slider
+    - scissor_rod1_base_to_scissor_rod1
+    - scissor_rod1_top_to_lift_top
+    - lift_top_to_top_slider
+    - scissor_rod3_base_to_scissor_rod3
+    - scissor_rod2_base_to_scissor_rod2
+    - scissor_rod4_base_to_scissor_rod4
+  sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+controller_list:
+  - name: lift_controller
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - lift_base_to_base_slider
+      - scissor_rod1_base_to_scissor_rod1
+      - scissor_rod1_top_to_lift_top
+      - lift_top_to_top_slider
+      - scissor_rod3_base_to_scissor_rod3
+      - scissor_rod2_base_to_scissor_rod2
+      - scissor_rod4_base_to_scissor_rod4

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find robomuse_navigation)/maps/cart2_map.yaml"/>
+  <arg name="configuration_basename" default="robomuse5_lds_2d_simulation.lua"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find robomuse_description)/urdf/robomuse.xacro'" />
+  <arg name="multi_robot_name" default=""/>
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
+
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- move_base -->
+  <include file="$(find robomuse_navigation)/launch/move_base.launch">
+
+  </include>
+
+  <!-- cartographer_node -->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" args="-configuration_directory $(find robomuse_cartographer)/config -configuration_basename $(arg configuration_basename)" output="screen">
+    <remap from="/imu" to="/flat_imu"/>
+    <!--remap from="points2" to="/camera/depth/points" / -->
+  </node>
+
+  <!-- cartographer_occupancy_grid_node -->
+  <node pkg="cartographer_ros" type="cartographer_occupancy_grid_node" name="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+  <!-- flat_world_imu_node-->
+  <node pkg="robomuse_cartographer" type="flat_world_imu_node" name="flat_world_imu_node" output="screen">
+    <remap from="imu_in" to="robo_diff/imu" />
+    <remap from="imu_out" to="/flat_imu" />
+  </node>
+
+  <!-- rviz-->
+  <group if="$(arg open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find robomuse_cartographer)/rviz/robomuse5_cartographer.rviz"/>
+  </group>
+</launch>

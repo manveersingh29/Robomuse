@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="map_file" default="$(find robomuse_cartographer)/maps/lab_full_new5.yaml"/>
+  <arg name="open_rviz" default="false"/>
+  <arg name="move_forward_only" default="false"/>
+  <arg name="multi_robot_name" default=""/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find robomuse_description)/urdf/robomuse.xacro'"/>
+  <param name="robot_description" command="$(arg urdf_file)"/>
+
+  <!--Hokuyo-->
+  <include file= "$(find urg_node)/launch/urg_lidar.launch"/>
+
+  <!--RPLidar-->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+
+  <!--Merger-->
+  <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch"/>
+
+  <!--Hardware-->
+  <include file= "$(find robomuse_hardware)/launch/hw_control.launch"/>
+
+  <!--Ekf_Node-->
+  <include file= "$(find robomuse_hardware)/launch/ekf_odom.launch"/>
+
+  <!--Serial Node for IMU-->
+  <node pkg="rosserial_python" type="serial_node_imu.py" name="serial_node" output="screen">
+  </node>
+
+  <!--Node for Odometry for Navigation-->
+  <node pkg="robomuse_hardware" type="nav_odometry.cpp" name="nav_odometry.cpp" output="screen">
+  </node>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- AMCL -->
+  <include file="$(find robomuse_navigation)/launch/hw_amcl.launch"/>
+
+  <!-- move_base -->
+  <include file="$(find robomuse_navigation)/launch/hw_move_base.launch">
+    <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+  </include>
+
+  <!--Self_localization-->
+
+  <!--node pkg="robomuse_navigation" name="self_localization" type="self_localization.py" /-->
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find robomuse_navigation)/rviz/robomuse5_navigation.rviz"/>
+  </group>
+</launch>

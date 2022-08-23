@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Arguments -->
+  <arg name="configuration_basename" default="robomuse5_lds_2d.lua"/>
+  <arg name="open_rviz" default="false"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find robomuse_description)/urdf/robomuse.xacro'" />
+  <arg name="multi_robot_name" default=""/>
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="tf_prefix" value="$(arg multi_robot_name)"/>
+  </node>
+
+
+
+  <!--Hokuyo-->
+  <include file= "$(find urg_node)/launch/urg_lidar.launch"/>
+
+  <!--RPLidar-->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+
+  <!--Merger-->
+  <include file="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch"/>
+
+  <!--Hardware-->
+  <include file= "$(find robomuse_hardware)/launch/hw_control.launch"/>
+
+
+  <!-- move_base>
+  <include file="$(find robomuse_navigation)/launch/hw_move_base.launch">
+
+  </include-->
+
+  <!-- cartographer_node -->
+  <node pkg="cartographer_ros" type="cartographer_node" name="cartographer_node" args="-configuration_directory $(find robomuse_cartographer)/config -configuration_basename $(arg configuration_basename)" output="screen">
+    <remap from="odom" to="robomuse_diff/odom"/>
+    <!--remap from="/scan" to="/scan_multi"/-->
+    <!--remap from="points2" to="/camera/depth/points" / -->
+  </node>
+
+  <!-- cartographer_occupancy_grid_node -->
+  <node pkg="cartographer_ros" type="cartographer_occupancy_grid_node" name="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+  <!-- flat_world_imu_node-->
+  <!--node pkg="robomuse_cartographer" type="flat_world_imu_node" name="flat_world_imu_node" output="screen">
+    <remap from="imu_in" to="robo_diff/imu" />
+    <remap from="imu_out" to="/flat_imu" />
+  </node-->
+
+  <!-- rviz-->
+  <group if="$(arg open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find robomuse_cartographer)/rviz/robomuse5_cartographer.rviz"/>
+  </group>
+</launch>
