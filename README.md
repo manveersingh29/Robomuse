@@ -1,4 +1,4 @@
-# RoboMuse_V
+# RoboMuse
 
 ## Initiating the package
 
